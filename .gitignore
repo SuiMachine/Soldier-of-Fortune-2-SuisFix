@@ -1,0 +1,6 @@
+# Visual Studio trash
+.vs/*
+
+# Build trash
+SoF2-Fixes/Debug/*
+SoF2-Fixes/Release/*
