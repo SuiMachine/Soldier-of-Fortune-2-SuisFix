@@ -27,8 +27,10 @@ void FovHack::UpdateFOV(int SizeX, int SizeY, int FOV)
 	if (newAspect != this->aspectRatio)
 	{
 		double dHorizontalRadians = M_PI * FOV / 180;
-		double dVerticalRadios = 2 * atan(tan(dHorizontalRadians / 2) * (3.0 / 4.0));
-		dHorizontalRadians = 2 * atan(tan(dVerticalRadios / 2) * newAspect);
+		double dVerticalRadians = 2 * atan(tan(dHorizontalRadians / 2) * (3.0 / 4.0));
+		//printf("Initial FOV calculation (4:3): %.3d (hor) %.3d (vert)\n", dHorizontalRadians, dVerticalRadians);
+		dHorizontalRadians = 2 * atan(tan(dVerticalRadians / 2) * newAspect);
+		//printf("Recalculated FOV (current asp): %.3d (hor) %.3d (vert)\n", dHorizontalRadians, dVerticalRadians);
 		FOV = (int)round(dHorizontalRadians * (180.0 / M_PI));
 
 		if (FOV > 179)
@@ -41,6 +43,7 @@ void FovHack::UpdateFOV(int SizeX, int SizeY, int FOV)
 		_itoa_s(FOV, this->FovValueAsChar, sizeof(this->FovValueAsChar), 10);
 
 		this->aspectRatio = newAspect;
+
 	}
 }
 

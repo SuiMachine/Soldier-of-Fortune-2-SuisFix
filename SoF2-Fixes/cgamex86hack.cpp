@@ -20,7 +20,6 @@ DWORD __stdcall CheckPresenceAndReinstall(LPVOID arg)
 				int width = *(int*)((intptr_t)baseModule + 0x148094);
 				int height = *(int*)((intptr_t)baseModule + 0x148098);
 
-
 				ths->fovHack->UpdateFOV(width, height, 90);
 				ths->fovHack->OverrideMemory();
 				ths->ModuleWasPresent = true;

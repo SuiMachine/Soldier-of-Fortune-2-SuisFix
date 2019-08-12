@@ -51,6 +51,17 @@ static bool HookJmpTrampoline(DWORD targetToHook, void* ourFunction, int overrid
 	return true;
 }
 
+template<class Out, class In>
+Out type_pun(In x)
+{
+	union {
+		In a;
+		Out b;
+	};
+	a = x;
+	return b;
+};
+
 static bool HookCallTrampoline(DWORD targetToHook, void* ourFunction, int overrideLenght)
 {
 	if (overrideLenght < 5)

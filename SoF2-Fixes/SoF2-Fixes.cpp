@@ -17,7 +17,6 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 		
 		if (std::strstr((const char*)&exeName, "sof2.exe"))
 		{
-
 			mainHack = new cgamex86hack();
 		}
 
