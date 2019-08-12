@@ -20,7 +20,7 @@ DWORD __stdcall CheckPresenceAndReinstall(LPVOID arg)
 				int width = *(int*)((intptr_t)baseModule + 0x148094);
 				int height = *(int*)((intptr_t)baseModule + 0x148098);
 
-				ths->fovHack->UpdateFOV(width, height, 90);
+				ths->fovHack->UpdateFOV(width, height, ths->DesiredFOV);
 				ths->fovHack->OverrideMemory();
 				ths->ModuleWasPresent = true;
 			}
@@ -45,6 +45,8 @@ cgamex86hack::cgamex86hack()
 	UnprotectModule(baseModule);
 
 	//Initialize hacks
+	CIniReader reader = CIniReader("");
+	this->DesiredFOV = reader.ReadInteger("MAIN", "FOV", 80);
 	fovHack = new FovHack();
 
 	CreateThread(NULL, NULL, CheckPresenceAndReinstall, this, 0, NULL);

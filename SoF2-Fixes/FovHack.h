@@ -3,7 +3,6 @@
 #include <math.h>
 #include <stdio.h>
 
-
 class FovHack
 {
 public:
