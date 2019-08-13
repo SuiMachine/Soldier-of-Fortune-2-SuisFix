@@ -50,7 +50,9 @@ void FovHack::UpdateFOV(int SizeX, int SizeY, int FOV)
 
 void FovHack::OverrideMemory()
 {
-	PredefinedQuake3Setting* setting = (PredefinedQuake3Setting*)0x300ADF68;
+	HMODULE handle = GetModuleHandle("cgamex86.dll");
+	UnprotectModule(handle);
+	PredefinedQuake3Setting* setting = (PredefinedQuake3Setting*)((intptr_t)handle + 0xADF68);
 	setting->parse->parsedValue = this->FovValue;
 	setting->parse->parsedValueAsFloat = (float)this->FovValue;
 	setting->attribute = this->FovValueAsChar;
@@ -60,5 +62,4 @@ void FovHack::OverrideMemory()
 	*(float*)((intptr_t)baseModule + 0x3F8958) = (float)this->FovValue;
 	
 	OutputDebugString("Overriding FOV\n");
-
 }

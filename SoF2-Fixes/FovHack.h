@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <math.h>
 #include <stdio.h>
+#include "HookFunctions.h"
 
 class FovHack
 {

@@ -10,6 +10,7 @@ class cgamex86hack
 {
 public:
 	cgamex86hack();
+	void overrideGamex86Content();
 	//void CheckPresenceAndReinstall();
 	bool ModuleWasPresent = false;
 	HMODULE cGamex86Reference = NULL;
