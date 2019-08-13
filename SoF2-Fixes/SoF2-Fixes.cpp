@@ -20,6 +20,8 @@ HMODULE _stdcall DetourLoadLibrary(LPCSTR ModuleName)
 
 
 
+
+
 BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 {
 	if (reason == DLL_PROCESS_ATTACH)

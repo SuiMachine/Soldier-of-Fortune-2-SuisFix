@@ -1,5 +1,20 @@
 #include "cgamex86hack.h"
 
+DWORD dwStyleOverride = WS_VISIBLE | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;;
+DWORD dwStyleDetourReturn;
+__declspec(naked) void dwStyleDetour()
+{
+	__asm
+	{
+		push    ebx //nHeight
+		push    ebp //nWidth
+		push    edi //Y
+		push    esi //X
+		push    DS:[dwStyleOverride] //style
+		jmp dwStyleDetourReturn
+	}
+
+}
 
 cgamex86hack::cgamex86hack()
 {
@@ -14,6 +29,9 @@ cgamex86hack::cgamex86hack()
 		this->DesiredFOV = reader.ReadInteger("MAIN", "FOV", 80);
 		fovHack = new FovHack();
 		displayModesHack = new DisplayModesHack(reader.ReadInteger("MAIN", "Width", 0), reader.ReadInteger("MAIN", "Height", 0));
+
+		if (reader.ReadBoolean("MAIN", "Borderless", 0))
+			HookInsideFunction(0x100B91FA, dwStyleDetour, &dwStyleDetourReturn, 5);
 	}
 	else
 	{
