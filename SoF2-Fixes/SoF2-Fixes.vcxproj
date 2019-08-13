@@ -143,11 +143,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cgamex86hack.cpp" />
+    <ClCompile Include="DisplayModesHack.cpp" />
     <ClCompile Include="FovHack.cpp" />
     <ClCompile Include="SoF2-Fixes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cgamex86hack.h" />
+    <ClInclude Include="DisplayModesHack.h" />
     <ClInclude Include="FovHack.h" />
     <ClInclude Include="HookFunctions.h" />
     <ClInclude Include="VersionInfo.h" />
