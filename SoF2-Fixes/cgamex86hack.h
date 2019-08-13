@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <thread>
+#include <psapi.h>
 #include "HookFunctions.h"
 #include "FovHack.h"
 #include "../externals//inireader/IniReader.h"
@@ -12,11 +13,10 @@ class cgamex86hack
 public:
 	cgamex86hack();
 	void overrideGamex86Content();
-	//void CheckPresenceAndReinstall();
-	bool ModuleWasPresent = false;
-	HMODULE cGamex86Reference = NULL;
+	bool checkIfCorrectVersion();
 	FovHack* fovHack;
 	DisplayModesHack* displayModesHack;
 	int DesiredFOV = 80;
+	bool correctVersion = false;
 };
 
