@@ -17,10 +17,6 @@ struct PredefinedQuake3Setting
 	char* attribute;
 };
 
-FovHack::FovHack()
-{
-}
-
 void FovHack::UpdateFOV(int SizeX, int SizeY, int FOV)
 {
 	float newAspect = SizeX * 1.0f / SizeY;

@@ -145,6 +145,7 @@
     <ClCompile Include="cgamex86hack.cpp" />
     <ClCompile Include="DisplayModesHack.cpp" />
     <ClCompile Include="FovHack.cpp" />
+    <ClCompile Include="HudCorrection.cpp" />
     <ClCompile Include="SoF2-Fixes.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="DisplayModesHack.h" />
     <ClInclude Include="FovHack.h" />
     <ClInclude Include="HookFunctions.h" />
+    <ClInclude Include="HudCorrection.h" />
     <ClInclude Include="VersionInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

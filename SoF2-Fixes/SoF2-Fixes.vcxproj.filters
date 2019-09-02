@@ -32,6 +32,9 @@
     <ClCompile Include="DisplayModesHack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HudCorrection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FovHack.h">
@@ -47,6 +50,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DisplayModesHack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HudCorrection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

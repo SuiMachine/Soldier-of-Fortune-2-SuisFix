@@ -4,5 +4,6 @@
     <LocalDebuggerCommand>D:\GOG Games\Soldier of Fortune 2\SoF2.exe</LocalDebuggerCommand>
     <LocalDebuggerWorkingDirectory>D:\GOG Games\Soldier of Fortune 2\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>+setrandom sv_cheats 1 +load quick1</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

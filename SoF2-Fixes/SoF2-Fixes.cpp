@@ -14,6 +14,10 @@ HMODULE _stdcall DetourLoadLibrary(LPCSTR ModuleName)
 	{
 		mainHack->overrideGamex86Content();
 	}
+	else if (ModuleAsString._Equal("menusx86.dll"))
+	{
+		mainHack->overrideMenusx86Content();
+	}
 
 	return library;
 }

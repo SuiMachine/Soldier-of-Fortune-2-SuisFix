@@ -1,20 +1,6 @@
 #include "cgamex86hack.h"
+#pragma warning(disable: 6387)
 
-DWORD dwStyleOverride = WS_VISIBLE | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;;
-DWORD dwStyleDetourReturn;
-__declspec(naked) void dwStyleDetour()
-{
-	__asm
-	{
-		push    ebx //nHeight
-		push    ebp //nWidth
-		push    edi //Y
-		push    esi //X
-		push    DS:[dwStyleOverride] //style
-		jmp dwStyleDetourReturn
-	}
-
-}
 
 cgamex86hack::cgamex86hack()
 {
@@ -29,9 +15,10 @@ cgamex86hack::cgamex86hack()
 		this->DesiredFOV = reader.ReadInteger("MAIN", "FOV", 80);
 		fovHack = new FovHack();
 		displayModesHack = new DisplayModesHack(reader.ReadInteger("MAIN", "Width", 0), reader.ReadInteger("MAIN", "Height", 0));
-
-		if (reader.ReadBoolean("MAIN", "Borderless", 0))
-			HookInsideFunction(0x100B91FA, dwStyleDetour, &dwStyleDetourReturn, 5);
+		if (reader.ReadBoolean("HudCorrection", "Enable", true))
+		{
+			hudCorrection = new HudCorrection(reader.ReadFloat("HudCorrection", "CustomScale", 0.0f));
+		}
 	}
 	else
 	{
@@ -51,6 +38,19 @@ void cgamex86hack::overrideGamex86Content()
 
 		this->fovHack->UpdateFOV(width, height, this->DesiredFOV);
 		this->fovHack->OverrideMemory();
+	}
+}
+
+void cgamex86hack::overrideMenusx86Content()
+{
+	if (this->correctVersion && this->hudCorrection != NULL)
+	{
+		HMODULE baseModule = GetModuleHandle(NULL);
+
+		int width = *(int*)((intptr_t)baseModule + 0x148094);
+		int height = *(int*)((intptr_t)baseModule + 0x148098);
+
+		this->hudCorrection->InstallDetour(width, height);
 	}
 }
 
