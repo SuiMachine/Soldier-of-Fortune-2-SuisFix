@@ -32,7 +32,6 @@ void __fastcall PerformHudCorrectionHighLevel()
 					auto temp = std::to_string(scaleD);
 					strcpy_s(scale, temp.length() + 1, temp.c_str());
 				}
-				Sleep(0);
 			}
 		}
 	}
