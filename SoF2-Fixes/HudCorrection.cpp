@@ -1,5 +1,9 @@
 #include "HudCorrection.h"
 #include <string>
+#include <sstream>
+#include <iostream>
+#include <regex>
+#include <set>
 
 DWORD returnCorrectHudConfig;
 float ScaleMultiplier = 1.5f;
@@ -11,28 +15,48 @@ void __fastcall PerformHudCorrectionHighLevel()
 
 	if (foundHudRight != NULL || foundHudLeft != NULL)
 	{
-		char* hudPos = foundHudRight != NULL ? foundHudRight : foundHudLeft;
-		char* Proportional = strstr(hudPos, "proportional");
+		auto str_Config = (std::string)(*ConfigContent);
 
-		if (Proportional != NULL)
+		std::string newConfig = "";
+
+
+		std::string token;
+		std::stringstream iss(str_Config);
+
+		std::regex reg_isValidLine("hud_leftback|hud_rightback");
+		std::regex removeProportional("(<image.+[hud_leftback]|[hud_rightback].+)(proportional)(.+>|>)");
+		std::regex findScale("(.+scale )([+-]?([0-9]*[.])?[0-9]+)(.+)");
+
+
+		while (getline(iss, token))
 		{
-			char* scale = strstr(Proportional - 6, " ") + 1;
-
-			if (Proportional != NULL)
+			if (std::regex_search(token, reg_isValidLine))
 			{
-				strcpy_s(Proportional, 12, "           ");
-			}
-
-			if (scale != NULL)
-			{
-				double scaleD = atof(scale);
-				if (scaleD > 0)
+				token = std::regex_replace(token, removeProportional, "$1$3");
+				std::smatch res;
+				std::regex_search(token, res, findScale, std::regex_constants::match_default);
+				if (res.length() != 0)
 				{
-					scaleD = scaleD * ScaleMultiplier;
-					auto temp = std::to_string(scaleD);
-					strcpy_s(scale, temp.length() + 1, temp.c_str());
+					std::string scaleAsStr = res[2];
+					auto scale = atof(scaleAsStr.c_str());
+					scale *= ScaleMultiplier;
+					token = std::regex_replace(token, findScale, "$1 " + std::to_string(scale) + "$4");
 				}
+
+				Sleep(0);
 			}
+			newConfig += token + "\n";
+		}
+		
+
+
+		int originalLenght = strlen(*ConfigContent);
+		if (newConfig.length() > originalLenght)
+			MessageBox(NULL, "Error", "Original config lenght was shorter then edited one", MB_ICONERROR | MB_OK);
+		else
+		{
+			memcpy(*ConfigContent, newConfig.c_str(), newConfig.length());
+			memset(*ConfigContent + newConfig.length(), ' ', originalLenght - newConfig.length());
 		}
 	}
 }
