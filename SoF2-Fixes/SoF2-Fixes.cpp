@@ -22,8 +22,30 @@ HMODULE _stdcall DetourLoadLibrary(LPCSTR ModuleName)
 	return library;
 }
 
+static HWND(__stdcall* TrueCreateWindowEx)(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam) = CreateWindowEx;
+HWND __stdcall DetourCreateWindowEx(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR lpWindowName, DWORD dwStyle, int X, int Y, int nWidth, int nHeight, HWND hWndParent, HMENU hMenu, HINSTANCE hInstance, LPVOID lpParam)
+{
+	bool isMainWindow = false;
+	if (lpWindowName != NULL)
+		isMainWindow = strstr(lpWindowName, "Soldier of Fortune 2 : Double Helix") != NULL;
+
+	auto result = TrueCreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
+
+	if (isMainWindow)
+	{
+
+		RECT rect;
+		GetClientRect(result, &rect);
+		auto width = rect.right - rect.left;
+		auto height = rect.bottom - rect.top + 9;
+		SetWindowLong(result, GWL_STYLE, WS_VISIBLE | WS_POPUP | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+
+		SetWindowPos(result, 0, 0, 0, width, height, 0);
+	}
 
 
+	return result;
+}
 
 
 BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
@@ -46,6 +68,8 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 		DetourTransactionBegin();
 		DetourUpdateThread(GetCurrentThread());
 		DetourAttach(&(PVOID&)TrueLoadLibrary, DetourLoadLibrary);
+		DetourAttach(&(PVOID&)TrueCreateWindowEx, DetourCreateWindowEx);
+
 		DetourTransactionCommit();
 
 	}
@@ -53,6 +77,7 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 		DetourTransactionBegin();
 		DetourUpdateThread(GetCurrentThread());
 		DetourDetach(&(PVOID&)TrueLoadLibrary, DetourLoadLibrary);
+		DetourDetach(&(PVOID&)TrueCreateWindowEx, DetourCreateWindowEx);
 		DetourTransactionCommit();
 	}
 	return TRUE;
