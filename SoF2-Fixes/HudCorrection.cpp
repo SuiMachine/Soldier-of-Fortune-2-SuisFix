@@ -8,7 +8,7 @@
 DWORD returnCorrectHudConfig;
 float ScaleMultiplier = 1.5f;
 char** ConfigContent;
-void __fastcall PerformHudCorrectionHighLevel()
+void __fastcall PerformHudCorrectionAmmoCountersHighLevel()
 {
 	char * foundHudRight = strstr(*ConfigContent, "hud_rightback");
 	char * foundHudLeft = strstr(*ConfigContent, "hud_leftback");
@@ -61,7 +61,7 @@ void __fastcall PerformHudCorrectionHighLevel()
 	}
 }
  
-void __declspec(naked) CorrectHudConfig()
+void __declspec(naked) CorrectHudAmmoCountersConfig()
 {
 	__asm
 	{
@@ -74,7 +74,7 @@ void __declspec(naked) CorrectHudConfig()
 		mov[ConfigContent],esi
 	}
 
-	PerformHudCorrectionHighLevel();
+	PerformHudCorrectionAmmoCountersHighLevel();
 
 	__asm
 	{
@@ -97,8 +97,7 @@ void HudCorrection::InstallDetour(float SizeX, float SizeY)
 	HMODULE mod = GetModuleHandle("Menusx86.dll");
 	UnprotectModule(mod);
 	
-
-	HookInsideFunction((DWORD)mod + 0x22E71, CorrectHudConfig, &returnCorrectHudConfig, 0x7);
+	HookInsideFunction((intptr_t)mod + 0x22E71, CorrectHudAmmoCountersConfig, &returnCorrectHudConfig, 0x7);
 	if (this->CustomHudScale != 0)
 		ScaleMultiplier = this->CustomHudScale;
 	else

@@ -13,7 +13,7 @@ static void UnprotectModule(HMODULE p_Module)
 	VirtualProtect((LPVOID)p_Module, s_ImageSize, PAGE_EXECUTE_READWRITE, &s_OldProtect);
 }
 
-static bool HookInsideFunction(DWORD targetToHook, void* ourFunction, DWORD* returnAddress, int overrideLenght)
+static bool HookInsideFunction(intptr_t targetToHook, void* ourFunction, DWORD* returnAddress, int overrideLenght)
 {
 	if (overrideLenght < 5)
 		return false;
@@ -33,7 +33,7 @@ static bool HookInsideFunction(DWORD targetToHook, void* ourFunction, DWORD* ret
 	return true;
 }
 
-static bool HookJmpTrampoline(DWORD targetToHook, void* ourFunction, int overrideLenght)
+static bool HookJmpTrampoline(intptr_t targetToHook, void* ourFunction, int overrideLenght)
 {
 	if (overrideLenght < 5)
 		return false;
@@ -62,7 +62,7 @@ Out type_pun(In x)
 	return b;
 };
 
-static bool HookCallTrampoline(DWORD targetToHook, void* ourFunction, int overrideLenght)
+static bool HookCallTrampoline(intptr_t targetToHook, void* ourFunction, int overrideLenght)
 {
 	if (overrideLenght < 5)
 		return false;
@@ -70,7 +70,7 @@ static bool HookCallTrampoline(DWORD targetToHook, void* ourFunction, int overri
 	DWORD curProtectionFlag;
 	VirtualProtect((void*)targetToHook, overrideLenght, PAGE_EXECUTE_READWRITE, &curProtectionFlag);
 	memset((void*)targetToHook, 0x90, overrideLenght);
-	DWORD relativeAddress = ((DWORD)ourFunction - (DWORD)targetToHook) - 5;
+	intptr_t relativeAddress = ((intptr_t)ourFunction - (intptr_t)targetToHook) - 5;
 
 	*(BYTE*)targetToHook = 0xE8;
 	*(DWORD*)((DWORD)targetToHook + 1) = relativeAddress;

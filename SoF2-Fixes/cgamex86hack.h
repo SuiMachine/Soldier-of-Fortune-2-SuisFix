@@ -21,5 +21,6 @@ public:
 	HudCorrection* hudCorrection;
 	int DesiredFOV = 80;
 	bool correctVersion = false;
+	bool isBorderless = false;
 };
 

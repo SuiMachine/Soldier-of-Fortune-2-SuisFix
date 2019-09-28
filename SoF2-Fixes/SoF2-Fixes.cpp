@@ -8,15 +8,18 @@ static HMODULE(_stdcall* TrueLoadLibrary)(LPCSTR dwLibaryName) = LoadLibrary;
 HMODULE _stdcall DetourLoadLibrary(LPCSTR ModuleName)
 {
 	auto library = TrueLoadLibrary(ModuleName);
-	auto ModuleAsString = (std::string)ModuleName;
-	std::transform(ModuleAsString.begin(), ModuleAsString.end(), ModuleAsString.begin(), [](unsigned char c) { return std::tolower(c); });
-	if (ModuleAsString._Equal("cgamex86.dll"))
+	if (mainHack != NULL)
 	{
-		mainHack->overrideGamex86Content();
-	}
-	else if (ModuleAsString._Equal("menusx86.dll"))
-	{
-		mainHack->overrideMenusx86Content();
+		auto ModuleAsString = (std::string)ModuleName;
+		std::transform(ModuleAsString.begin(), ModuleAsString.end(), ModuleAsString.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (ModuleAsString._Equal("cgamex86.dll"))
+		{
+			mainHack->overrideGamex86Content();
+		}
+		else if (ModuleAsString._Equal("menusx86.dll"))
+		{
+			mainHack->overrideMenusx86Content();
+		}
 	}
 
 	return library;
@@ -31,7 +34,7 @@ HWND __stdcall DetourCreateWindowEx(DWORD dwExStyle, LPCSTR lpClassName, LPCSTR 
 
 	auto result = TrueCreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
 
-	if (isMainWindow)
+	if (isMainWindow && mainHack != NULL && mainHack->isBorderless)
 	{
 
 		RECT rect;
@@ -62,6 +65,12 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 		
 		if (std::strstr((const char*)&exeName, "sof2.exe"))
 		{
+			MODULEINFO moduleInfo;
+			GetModuleInformation(GetCurrentProcess(), baseModule, &moduleInfo, sizeof(moduleInfo));
+			if (moduleInfo.SizeOfImage != 8683520)
+			{
+				int result = MessageBox(NULL, "SOF2.exe has a different size than expected - it may be due to exe being different than the one the fix was designed for.", "Warning", MB_ICONWARNING | MB_OK);
+			}
 			mainHack = new cgamex86hack();
 		}
 
@@ -69,7 +78,6 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD reason, LPVOID)
 		DetourUpdateThread(GetCurrentThread());
 		DetourAttach(&(PVOID&)TrueLoadLibrary, DetourLoadLibrary);
 		DetourAttach(&(PVOID&)TrueCreateWindowEx, DetourCreateWindowEx);
-
 		DetourTransactionCommit();
 
 	}

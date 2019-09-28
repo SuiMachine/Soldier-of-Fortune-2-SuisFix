@@ -13,6 +13,7 @@ cgamex86hack::cgamex86hack()
 		//Initialize hacks
 		CIniReader reader = CIniReader("");
 		this->DesiredFOV = reader.ReadInteger("MAIN", "FOV", 80);
+		this->isBorderless = reader.ReadBoolean("MAIN", "Borderless", false);
 		fovHack = new FovHack();
 		displayModesHack = new DisplayModesHack(reader.ReadInteger("MAIN", "Width", 0), reader.ReadInteger("MAIN", "Height", 0));
 		if (reader.ReadBoolean("HudCorrection", "Enable", true))
